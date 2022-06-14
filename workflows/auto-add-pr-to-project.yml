@@ -13,3 +13,4 @@ jobs:
       - uses: actions/add-to-project@main
         with:
           project-url: https://github.com/orgs/endaoment/projects/16
+          github-token: ${{ secrets.GITHUB_TOKEN }}
