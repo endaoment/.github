@@ -17,7 +17,6 @@ assignees: ''
 ## Completion Parameters <!-- Add a list of all parameters we must have so a reviewer can consider this complete -->
 
 - [ ] 
-- [ ] 
 
 ## Steps to reproduce the issue <!-- In case this is bug or requires fix, list the steps required to produce the problem -->
 
