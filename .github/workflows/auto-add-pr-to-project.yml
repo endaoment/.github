@@ -67,4 +67,4 @@ jobs:
                   id
                 }
               }
-            }' -f pr=$PR_ID -f label=$label --jq '.data.addLabelsToLabelable.item.id')"     
+            }' -f pr=$PR_ID -f label=$label --jq '.data.addLabelsToLabelable.labelable.id')"     
