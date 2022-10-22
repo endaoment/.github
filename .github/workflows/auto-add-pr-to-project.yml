@@ -52,7 +52,7 @@ jobs:
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f pr=$PR_ID -f --jq '.data.addProjectV2ItemById.projectV2Item.id')"     
+            }' -f project=$PROJECT_ID -f pr=$PR_ID --jq '.data.addProjectV2ItemById.projectV2Item.id')"     
 
       - name: Add PR to NDAO eng project
         env:

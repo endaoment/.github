@@ -53,7 +53,7 @@ jobs:
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f issue=$ISSUE_ID -f --jq '.data.addProjectV2ItemById.projectV2Item.id')"   
+            }' -f project=$PROJECT_ID -f issue=$ISSUE_ID --jq '.data.addProjectV2ItemById.projectV2Item.id')"   
         
       - name: Add *new* tag to issue
         env:
