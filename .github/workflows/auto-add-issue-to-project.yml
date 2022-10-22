@@ -62,11 +62,11 @@ jobs:
           LABEL: "*new*"
         run: |
          item_id="$( gh api graphql -f query='
-            mutation($label:ID!, $pr:ID!) {
+            mutation($label:ID!, $issue:ID!) {
               addLabelsToLabelable(input: {labelIds: [$label], labelableId: $pr}) {
-                item {
+                labelable {
                   id
                 }
               }
-            }' -f pr=$PR_ID -f label=$label --jq '.data.addLabelsToLabelable.item.id')"            
+            }' -f issue=$ISSUE_ID -f label=$label --jq '.data.addLabelsToLabelable.labelable.id')"            
 

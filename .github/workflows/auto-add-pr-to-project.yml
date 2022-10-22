@@ -63,7 +63,7 @@ jobs:
          item_id="$( gh api graphql -f query='
             mutation($label:ID!, $pr:ID!) {
               addLabelsToLabelable(input: {labelIds: [$label], labelableId: $pr}) {
-                item {
+                labelable {
                   id
                 }
               }
