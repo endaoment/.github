@@ -45,7 +45,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
           ISSUE_ID: ${{ github.event.issue.node_id }}
-          LABELS: "['*new*']"
+          LABELS: "*new*"
         run: |
           item_id="$( gh api graphql -f query='
             mutation($project:ID!, $issue:ID!) {
@@ -57,11 +57,11 @@ jobs:
             }' -f project=$PROJECT_ID -f issue=$ISSUE_ID -f labels=$LABELS --jq '.data.addProjectV2ItemById.projectV2Item.id')"   
         |
          item_id="$( gh api graphql -f query='
-            mutation($labels:[ID!], $pr:ID!) {
-              addLabelsToLabelable(input: {labelIds: $labels, labelableId: $pr}) {
+            mutation($label:ID!, $pr:ID!) {
+              addLabelsToLabelable(input: {labelIds: [$label], labelableId: $pr}) {
                 item {
                   id
                 }
               }
-            }' -f pr=$PR_ID -f labels=$labels --jq '.data.addLabelsToLabelable.item.id')"            
+            }' -f pr=$PR_ID -f label=$label --jq '.data.addLabelsToLabelable.item.id')"            
 
