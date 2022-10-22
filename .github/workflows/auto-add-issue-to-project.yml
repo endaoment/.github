@@ -55,7 +55,7 @@ jobs:
               }
             }' -f project=$PROJECT_ID -f issue=$ISSUE_ID --jq '.data.addProjectV2ItemById.projectV2Item.id')"          
 
-            name: Add PR to project
+name: Add PR to project
 on:
   pull_request:
     types:
