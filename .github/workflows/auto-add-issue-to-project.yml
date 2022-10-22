@@ -8,7 +8,7 @@ jobs:
   track_issue:
     runs-on: ubuntu-latest
     steps:
-      - name: Get project data
+      - name: Get NDAO eng project data
         env:
           GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
           ORGANIZATION: endaoment
@@ -41,7 +41,7 @@ jobs:
 
           echo 'PROJECT_ID='$(jq '.data.organization.projectV2.id' project_data.json) >> $GITHUB_ENV
                     
-      - name: Add issue to project
+      - name: Add issue to NDAO eng project
         env:
           GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
           ISSUE_ID: ${{ github.event.issue.node_id }}
