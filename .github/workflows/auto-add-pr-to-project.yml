@@ -44,6 +44,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
           PR_ID: ${{ github.event.pull_request.node_id }}
+          LABELS: ['*new*']
+          COLUMN: 'Ready for Review'
         run: |
           item_id="$( gh api graphql -f query='
             mutation($project:ID!, $pr:ID!) {
@@ -52,4 +54,14 @@ jobs:
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f pr=$PR_ID --jq '.data.addProjectV2ItemById.projectV2Item.id')"     
+              addProjectColumn(input: {projectId: $project, name: $column}) {
+                item {
+                  id
+                }
+              }
+              addLabelsToLabelable(input: {labelIds: $labels, labelableId: $pr}) {
+                item {
+                  id
+                }
+              }
+            }' -f project=$PROJECT_ID -f pr=$PR_ID -f column=$COLUMN --jq '.data.addProjectV2ItemById.projectV2Item.id')"     

@@ -37,7 +37,7 @@ jobs:
                   }
                 }
               }
-            }' -f org=$ORGANIZATION -F number=$PROJECT_NUMBER > project_data.json
+            }' -f org=$ORGANIZATION -F number=$PROJECT_NUMBER -f labels=$LABELS > project_data.json
 
           echo 'PROJECT_ID='$(jq '.data.organization.projectV2.id' project_data.json) >> $GITHUB_ENV
                     
@@ -45,6 +45,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
           ISSUE_ID: ${{ github.event.issue.node_id }}
+          LABELS: ['*new*']
         run: |
           item_id="$( gh api graphql -f query='
             mutation($project:ID!, $issue:ID!) {
@@ -53,5 +54,10 @@ jobs:
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f issue=$ISSUE_ID --jq '.data.addProjectV2ItemById.projectV2Item.id')"          
+              addLabelsToLabelable(input: {labelIds: $labels, labelableId: $issue}) {
+                item {
+                  id
+                }
+              }
+            }' -f project=$PROJECT_ID -f issue=$ISSUE_ID -f labels=$LABELS --jq '.data.addProjectV2ItemById.projectV2Item.id')"          
 
