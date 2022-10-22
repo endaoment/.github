@@ -45,7 +45,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
           ISSUE_ID: ${{ github.event.issue.node_id }}
-          LABELS: "*new*"
+          LABEL: "*new*"
         run: |
           item_id="$( gh api graphql -f query='
             mutation($project:ID!, $issue:ID!) {
@@ -54,7 +54,7 @@ jobs:
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f issue=$ISSUE_ID -f labels=$LABELS --jq '.data.addProjectV2ItemById.projectV2Item.id')"   
+            }' -f project=$PROJECT_ID -f issue=$ISSUE_ID -f --jq '.data.addProjectV2ItemById.projectV2Item.id')"   
         |
          item_id="$( gh api graphql -f query='
             mutation($label:ID!, $pr:ID!) {
