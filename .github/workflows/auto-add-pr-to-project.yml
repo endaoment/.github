@@ -54,7 +54,13 @@ jobs:
                 }
               }
             }' -f project=$PROJECT_ID -f pr=$PR_ID -f --jq '.data.addProjectV2ItemById.projectV2Item.id')"     
-        |
+
+      - name: Add PR to NDAO eng project
+        env:
+          GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
+          PR_ID: ${{ github.event.pull_request.node_id }}
+          LABEL: "*new*"
+        run: |
          item_id="$( gh api graphql -f query='
             mutation($label:ID!, $pr:ID!) {
               addLabelsToLabelable(input: {labelIds: [$label], labelableId: $pr}) {
@@ -62,4 +68,4 @@ jobs:
                   id
                 }
               }
-            }' -f pr=$PR_ID -f column=$COLUMN --jq '.data.addLabelsToLabelable.item.id')"     
+            }' -f pr=$PR_ID -f label=$label --jq '.data.addLabelsToLabelable.item.id')"     

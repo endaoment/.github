@@ -55,7 +55,13 @@ jobs:
                 }
               }
             }' -f project=$PROJECT_ID -f issue=$ISSUE_ID -f --jq '.data.addProjectV2ItemById.projectV2Item.id')"   
-        |
+        
+      - name: Add *new* tag to issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
+          ISSUE_ID: ${{ github.event.issue.node_id }}
+          LABEL: "*new*"
+        run: |
          item_id="$( gh api graphql -f query='
             mutation($label:ID!, $pr:ID!) {
               addLabelsToLabelable(input: {labelIds: [$label], labelableId: $pr}) {
