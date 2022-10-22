@@ -54,10 +54,14 @@ jobs:
                   id
                 }
               }
-              addLabelsToLabelable(input: {labelIds: $labels, labelableId: $issue}) {
+            }' -f project=$PROJECT_ID -f issue=$ISSUE_ID -f labels=$LABELS --jq '.data.addProjectV2ItemById.projectV2Item.id')"   
+        |
+         item_id="$( gh api graphql -f query='
+            mutation($labels:[ID!], $pr:ID!) {
+              addLabelsToLabelable(input: {labelIds: $labels, labelableId: $pr}) {
                 item {
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f issue=$ISSUE_ID -f labels=$LABELS --jq '.data.addProjectV2ItemById.projectV2Item.id')"          
+            }' -f pr=$PR_ID -f labels=$labels --jq '.data.addLabelsToLabelable.item.id')"            
 
