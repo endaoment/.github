@@ -7,7 +7,7 @@ jobs:
   track_pr:
     runs-on: ubuntu-latest
     steps:
-      - name: Get project data
+      - name: Get NDAO eng project data
         env:
           GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
           ORGANIZATION: endaoment
@@ -40,7 +40,7 @@ jobs:
 
           echo 'PROJECT_ID='$(jq '.data.organization.projectV2.id' project_data.json) >> $GITHUB_ENV
                     
-      - name: Add PR to project
+      - name: Add PR to NDAO eng project
         env:
           GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
           PR_ID: ${{ github.event.pull_request.node_id }}
