@@ -5,6 +5,14 @@ on:
       - opened
 
 jobs:
+  add_labels:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: |
+            *new*
   track_issue:
     runs-on: ubuntu-latest
     steps:
@@ -54,19 +62,3 @@ jobs:
                 }
               }
             }' -f project=$PROJECT_ID -f issue=$ISSUE_ID --jq '.data.addProjectV2ItemById.projectV2Item.id')"   
-        
-      - name: Add *new* tag to issue
-        env:
-          GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
-          ISSUE_ID: ${{ github.event.issue.node_id }}
-          LABEL: "*new*"
-        run: |
-         item_id="$( gh api graphql -f query='
-            mutation($label:ID!, $issue:ID!) {
-              addLabelsToLabelable(input: {labelIds: [$label], labelableId: $pr}) {
-                labelable {
-                  id
-                }
-              }
-            }' -f issue=$ISSUE_ID -f label=$label --jq '.data.addLabelsToLabelable.labelable.id')"            
-
