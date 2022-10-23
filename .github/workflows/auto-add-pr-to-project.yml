@@ -3,6 +3,7 @@ on:
   pull_request:
     types:
       - opened
+      - push
 
 env: 
   GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
