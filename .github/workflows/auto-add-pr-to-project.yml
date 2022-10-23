@@ -65,5 +65,4 @@ jobs:
               addLabelsToLabelable(input: {labelIds: $labels, labelableId: $pr}) {
                 clientMutationId
               }
-            }
             }' -f pr=$PR_ID -f labels=$labels --jq '.data.addLabelsToLabelable.pullRequest.id')"     
