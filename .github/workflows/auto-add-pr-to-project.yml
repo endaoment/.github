@@ -41,7 +41,7 @@ jobs:
                   }
                 }
               }
-            }' -f org=$ORGANIZATION -F number=$PROJECT_NUMBER > project_data.json
+            }' -f org=$ORGANIZATION -f number=$PROJECT_NUMBER > project_data.json
 
           echo 'PROJECT_ID='$(jq '.data.organization.projectV2.id' project_data.json) >> $GITHUB_ENV
 
@@ -49,18 +49,18 @@ jobs:
         run: |
           gh api graphql -f query='
             mutation($project:ID!, $pr:ID!) {
-              addProjectV2ItemById(input: {projectId: ${{ env.PROJECT_ID }}, contentId: ${{ env.pr}}}) {
+              addProjectV2ItemById(input: {projectId: $project, contentId: $pr}) {
                 item {
                   id
                 }
               }
-            }'
+            }' -f pr={{ env.PROJECT_ID }} -f project={{ env.PROJECT_ID }} 
 
       - name: Add *new* tag to PR
         run: |
           gh api graphql -f query='
             mutation ($labels:[ID!]!, $pr:ID!) {
-              addLabelsToLabelable(input: {labelIds: ${{ env.LABELS }}, labelableId: ${{ env.PR_ID }}}) {
+              addLabelsToLabelable(input: {labelIds: ${{ env.LABELS }}, labelableId: ${{ env.PR_ID }} }) {
                 clientMutationId
               }
-            }' 
+            }' -f labels=${{env.LABELS}} -f pr={{env.PR_ID}}
