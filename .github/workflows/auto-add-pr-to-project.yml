@@ -3,15 +3,19 @@ on:
   pull_request:
     types:
       - opened
+
+env: 
+  GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
+  ORGANIZATION: endaoment
+  PROJECT_NUMBER: 16
+  PR_ID: ${{ github.event.pull_request.node_id }}
+  LABELS: "[*new*]"
+
 jobs:
   track_pr:
     runs-on: ubuntu-latest
     steps:
       - name: Get NDAO eng project data
-        env:
-          GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
-          ORGANIZATION: endaoment
-          PROJECT_NUMBER: 16
         run: |
           gh api graphql -f query='
             query($org: String!, $number: Int!) {
@@ -41,28 +45,21 @@ jobs:
           echo 'PROJECT_ID='$(jq '.data.organization.projectV2.id' project_data.json) >> $GITHUB_ENV
 
       - name: Add PR to NDAO eng project
-        env:
-          GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
-          PR_ID: ${{ github.event.pull_request.node_id }}
         run: |
-          item_id="$( gh api graphql -f query='
+          gh api graphql -f query='
             mutation($project:ID!, $pr:ID!) {
-              addProjectV2ItemById(input: {projectId: $project, contentId: $pr}) {
+              addProjectV2ItemById(input: {projectId: ${{ env.PROJECT_ID }}, contentId: ${{ env.pr}}}) {
                 item {
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f pr=$PR_ID --jq '.data.addProjectV2ItemById.projectV2Item.id')"     
+            }'
 
       - name: Add *new* tag to PR
-        env:
-          GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
-          PR_ID: ${{ github.event.pull_request.node_id }}
-          LABELS: "[*new*]"
         run: |
-         item_id="$( gh api graphql -f query='
+          gh api graphql -f query='
             mutation ($labels:[ID!]!, $pr:ID!) {
-              addLabelsToLabelable(input: {labelIds: $labels, labelableId: $pr}) {
+              addLabelsToLabelable(input: {labelIds: ${{ env.LABELS }}, labelableId: ${{ env.PR_ID }}}) {
                 clientMutationId
               }
-            }' -f pr=$PR_ID -f labels=$labels --jq '.data.addLabelsToLabelable.pullRequest.id')"     
+            }' 
