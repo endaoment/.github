@@ -4,6 +4,15 @@ on:
     types:
       - opened
 jobs:
+  add_labels:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ startsWith(github.event.comment.body, '/add-labels') }}
+        with:
+          labels: |
+            *new*
   track_pr:
     runs-on: ubuntu-latest
     steps:
@@ -53,16 +62,3 @@ jobs:
                 }
               }
             }' -f project=$PROJECT_ID -f pr=$PR_ID --jq '.data.addProjectV2ItemById.projectV2Item.id')"     
-
-      - name: Add *new* tag to PR
-        env:
-          GITHUB_TOKEN: ${{ secrets.ENDAOMENT_AUTO_ADDER }}
-          PR_ID: ${{ github.event.pull_request.node_id }}
-          LABELS: "[*new*]"
-        run: |
-         item_id="$( gh api graphql -f query='
-            mutation ($labels:[ID!]!, $pr:ID!) {
-              addLabelsToLabelable(input: {labelIds: $labels, labelableId: $pr}) {
-                clientMutationId
-              }
-            }' -f pr=$PR_ID -f labels=$labels"     
